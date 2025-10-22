@@ -34,6 +34,8 @@ export interface SchemaProperty {
   type?: string;
   title?: string;
   maxLength?: number;
+  minimum?: number;
+  maximum?: number;
   format?: string;
   default?: any;
   enum?: string[];

@@ -1,6 +1,6 @@
 // Create Machine Page
 import React from 'react';
-import { Button, Box } from '@mui/material';
+import { Button, Box, Fade, Slide } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import SmartForm from '../components/SmartForm';
@@ -22,38 +22,44 @@ const CreateMachine: React.FC = () => {
       }}
     >
       <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBack />}
-          onClick={() => navigate('/machines')}
-          sx={{
-            mb: 3,
-            color: 'white',
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(10px)',
-            fontWeight: 600,
-            px: 3,
-            py: 1,
-            borderRadius: 2,
-            textTransform: 'none',
-            fontSize: { xs: '0.9rem', sm: '1rem' },
-            '&:hover': {
-              borderColor: 'white',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              transform: 'translateX(-5px)',
-              transition: 'all 0.3s ease'
-            }
-          }}
-        >
-          Back to Machines
-        </Button>
+        <Fade in timeout={600}>
+          <Button
+            variant="outlined"
+            startIcon={<ArrowBack />}
+            onClick={() => navigate('/machines')}
+            sx={{
+              mb: 3,
+              color: 'white',
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              fontWeight: 600,
+              px: 3,
+              py: 1,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: { xs: '0.9rem', sm: '1rem' },
+              '&:hover': {
+                borderColor: 'white',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                transform: 'translateX(-5px)',
+                transition: 'all 0.3s ease'
+              }
+            }}
+          >
+            Back to Machines
+          </Button>
+        </Fade>
         
-        <SmartForm
-          topic="machine"
-          formType="create"
-          onSuccess={handleSuccess}
-        />
+        <Slide direction="up" in timeout={900}>
+          <Box>
+            <SmartForm
+              topic="machine"
+              formType="create"
+              onSuccess={handleSuccess}
+            />
+          </Box>
+        </Slide>
       </Box>
     </Box>
   );

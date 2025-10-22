@@ -20,9 +20,7 @@ class MachineBase(SQLModel):
     number: int
     float_number: float
     enum: MachineStatus = Field(default=MachineStatus.active)
-    family_name: Optional[str] = Field(default="", max_length=20)
-    age: Optional[int] = Field(default=0, ge=0, le=100)
-    nationality: Optional[str] = Field(default="", max_length=20)
+
 
 
 # Database model (table=True)

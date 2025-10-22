@@ -13,6 +13,7 @@ import {
   Typography,
   Paper,
   Fade,
+  Grow,
 } from '@mui/material';
 import { Save as SaveIcon, Add as AddIcon } from '@mui/icons-material';
 import api from '../api/axios';
@@ -39,6 +40,8 @@ const SmartForm: React.FC<SmartFormProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
 
   // Fetch schema on component mount
   useEffect(() => {
@@ -98,17 +101,109 @@ const SmartForm: React.FC<SmartFormProps> = ({
     return [];
   };
 
+  // Validate a single field
+  const validateField = (fieldName: string, value: any): string => {
+    if (!schema?.properties) return '';
+    
+    const prop = schema.properties[fieldName];
+    if (!prop) return '';
+
+    // Check if field is required (no default value and not optional)
+    const isRequired = prop.default === undefined && !fieldName.includes('password');
+    
+    // Required field validation
+    if (isRequired) {
+      if (value === '' || value === null || value === undefined) {
+        return `${prop.title || fieldName} is required`;
+      }
+    }
+
+    // Email validation
+    if (prop.format === 'email' && value) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        return 'Please enter a valid email address';
+      }
+    }
+
+    // String length validation
+    if (prop.type === 'string' && prop.maxLength && value) {
+      if (value.length > prop.maxLength) {
+        return `Maximum ${prop.maxLength} characters allowed`;
+      }
+    }
+
+    // Number range validation
+    if ((prop.type === 'integer' || prop.type === 'number') && value !== '') {
+      if (prop.minimum !== undefined && value < prop.minimum) {
+        return `Minimum value is ${prop.minimum}`;
+      }
+      if (prop.maximum !== undefined && value > prop.maximum) {
+        return `Maximum value is ${prop.maximum}`;
+      }
+    }
+
+    return '';
+  };
+
   // Handle form field changes
   const handleChange = (field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [field]: value,
     }));
+
+    // Validate if field was already touched
+    if (touchedFields[field]) {
+      const errorMsg = validateField(field, value);
+      setFieldErrors((prev) => ({
+        ...prev,
+        [field]: errorMsg,
+      }));
+    }
+  };
+
+  // Handle field blur (when user leaves the field)
+  const handleBlur = (fieldName: string) => {
+    setTouchedFields((prev) => ({
+      ...prev,
+      [fieldName]: true,
+    }));
+
+    const errorMsg = validateField(fieldName, formData[fieldName]);
+    setFieldErrors((prev) => ({
+      ...prev,
+      [fieldName]: errorMsg,
+    }));
   };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields before submission
+    const errors: Record<string, string> = {};
+    const touched: Record<string, boolean> = {};
+    
+    if (schema?.properties) {
+      Object.keys(schema.properties).forEach((fieldName) => {
+        touched[fieldName] = true;
+        const errorMsg = validateField(fieldName, formData[fieldName]);
+        if (errorMsg) {
+          errors[fieldName] = errorMsg;
+        }
+      });
+    }
+
+    setTouchedFields(touched);
+    setFieldErrors(errors);
+
+    // If there are errors, don't submit
+    if (Object.keys(errors).length > 0) {
+      setError('Please fix all errors before submitting');
+      return;
+    }
+
     setSubmitting(true);
     setError(null);
     setSuccess(false);
@@ -139,11 +234,15 @@ const SmartForm: React.FC<SmartFormProps> = ({
     // Handle enum fields (including $ref)
     if (prop.enum || prop.$ref) {
       const enumValues = prop.enum || (prop.$ref ? resolveRef(prop.$ref) : []);
+      const isRequired = prop.default === undefined;
+      const hasError = touchedFields[fieldName] && !!fieldErrors[fieldName];
       
       return (
         <FormControl 
           fullWidth 
           key={fieldName}
+          required={isRequired}
+          error={hasError}
           sx={{
             transition: 'all 0.3s ease',
             '&:hover': {
@@ -157,7 +256,7 @@ const SmartForm: React.FC<SmartFormProps> = ({
                 backgroundColor: 'rgba(255, 255, 255, 1)',
               },
               '&:hover fieldset': {
-                borderColor: 'primary.main',
+                borderColor: hasError ? 'error.main' : 'primary.main',
                 borderWidth: 2,
               },
               '&.Mui-focused': {
@@ -165,9 +264,11 @@ const SmartForm: React.FC<SmartFormProps> = ({
                 transform: 'scale(1.02)',
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'primary.main',
+                borderColor: hasError ? 'error.main' : 'primary.main',
                 borderWidth: 2,
-                boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+                boxShadow: hasError 
+                  ? '0 0 0 3px rgba(211, 47, 47, 0.1)'
+                  : '0 0 0 3px rgba(102, 126, 234, 0.1)',
               }
             }
           }}
@@ -177,6 +278,7 @@ const SmartForm: React.FC<SmartFormProps> = ({
             value={value}
             label={prop.title || fieldName}
             onChange={(e) => handleChange(fieldName, e.target.value)}
+            onBlur={() => handleBlur(fieldName)}
           >
             {enumValues.map((option) => (
               <MenuItem key={option} value={option}>
@@ -184,6 +286,20 @@ const SmartForm: React.FC<SmartFormProps> = ({
               </MenuItem>
             ))}
           </Select>
+          {hasError && (
+            <Typography 
+              variant="caption" 
+              color="error" 
+              sx={{ 
+                ml: 1.75, 
+                mt: 0.5,
+                display: 'block',
+                fontSize: '0.75rem'
+              }}
+            >
+              {fieldErrors[fieldName]}
+            </Typography>
+          )}
         </FormControl>
       );
     }
@@ -198,24 +314,36 @@ const SmartForm: React.FC<SmartFormProps> = ({
       inputType = 'password';
     }
 
+    // Check if field is required
+    const isRequired = prop.default === undefined && !fieldName.includes('password');
+    const hasError = touchedFields[fieldName] && !!fieldErrors[fieldName];
+    
     return (
       <TextField
         key={fieldName}
         fullWidth
+        required={isRequired}
         label={prop.title || fieldName}
         type={inputType}
         value={value}
+        error={hasError}
         onChange={(e) => {
           const val = inputType === 'number' ? Number(e.target.value) : e.target.value;
           handleChange(fieldName, val);
         }}
+        onBlur={() => handleBlur(fieldName)}
         inputProps={{
           maxLength: prop.maxLength,
           step: prop.type === 'number' ? 'any' : undefined,
         }}
         helperText={
-          prop.maxLength ? `Max ${prop.maxLength} characters` : 
-          prop.format === 'email' ? 'Enter a valid email' : ''
+          hasError 
+            ? fieldErrors[fieldName]
+            : prop.maxLength 
+              ? `Max ${prop.maxLength} characters` 
+              : prop.format === 'email' 
+                ? 'Enter a valid email' 
+                : ''
         }
         sx={{
           transition: 'all 0.3s ease',
@@ -229,7 +357,7 @@ const SmartForm: React.FC<SmartFormProps> = ({
             '&:hover': {
               backgroundColor: 'rgba(255, 255, 255, 1)',
               '& fieldset': {
-                borderColor: 'primary.main',
+                borderColor: hasError ? 'error.main' : 'primary.main',
                 borderWidth: 2,
               }
             },
@@ -237,51 +365,22 @@ const SmartForm: React.FC<SmartFormProps> = ({
               backgroundColor: 'rgba(255, 255, 255, 1)',
               transform: 'scale(1.02)',
               '& fieldset': {
-                borderColor: 'primary.main',
+                borderColor: hasError ? 'error.main' : 'primary.main',
                 borderWidth: 2,
-                boxShadow: '0 0 0 3px rgba(102, 126, 234, 0.1)',
+                boxShadow: hasError 
+                  ? '0 0 0 3px rgba(211, 47, 47, 0.1)'
+                  : '0 0 0 3px rgba(102, 126, 234, 0.1)',
               }
             }
           },
           '& .MuiInputLabel-root.Mui-focused': {
-            color: 'primary.main',
+            color: hasError ? 'error.main' : 'primary.main',
             fontWeight: 600,
           }
         }}
       />
     );
   };
-
-  if (loading) {
-    return (
-      <Box 
-        display="flex" 
-        justifyContent="center" 
-        alignItems="center" 
-        minHeight="400px"
-        sx={{
-          background: 'rgba(255, 255, 255, 0.95)',
-          borderRadius: 2,
-          backdropFilter: 'blur(10px)',
-        }}
-      >
-        <Box textAlign="center">
-          <CircularProgress size={60} thickness={4} sx={{ color: 'primary.main' }} />
-          <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
-            Loading form...
-          </Typography>
-        </Box>
-      </Box>
-    );
-  }
-
-  if (!schema) {
-    return (
-      <Paper elevation={3} sx={{ p: 4, background: 'rgba(255, 255, 255, 0.95)' }}>
-        <Alert severity="error">Failed to load form schema</Alert>
-      </Paper>
-    );
-  }
 
   return (
     <Fade in timeout={600}>
@@ -324,9 +423,21 @@ const SmartForm: React.FC<SmartFormProps> = ({
 
         <Box component="form" onSubmit={handleSubmit}>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: { xs: 2.5, sm: 3 } }}>
-            {Object.keys(schema.properties).map((fieldName) => {
+            {schema?.properties && Object.keys(schema.properties).map((fieldName, index) => {
               const prop = schema.properties[fieldName];
-              return renderField(fieldName, prop);
+              return (
+                <Grow 
+                  in 
+                  timeout={600} 
+                  style={{ transformOrigin: '0 0 0' }}
+                  {...({ timeout: 400 + index * 100 })}
+                  key={fieldName}
+                >
+                  <Box>
+                    {renderField(fieldName, prop)}
+                  </Box>
+                </Grow>
+              );
             })}
           </Box>
 

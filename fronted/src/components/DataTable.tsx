@@ -16,6 +16,9 @@ import {
   Chip,
   TextField,
   InputAdornment,
+  Fade,
+  Grow,
+  Slide,
 } from '@mui/material';
 import { Edit as EditIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -95,33 +98,6 @@ const DataTable: React.FC<DataTableProps> = ({
     return String(value);
   };
 
-  if (loading) {
-    return (
-      <Box sx={{ 
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center'
-      }}>
-        <Paper 
-          elevation={3}
-          sx={{ 
-            p: 6,
-            background: 'rgba(255, 255, 255, 0.95)',
-            borderRadius: 2,
-            textAlign: 'center'
-          }}
-        >
-          <CircularProgress size={60} thickness={4} />
-          <Typography variant="h6" sx={{ mt: 3, color: 'text.secondary' }}>
-            Loading {title}...
-          </Typography>
-        </Paper>
-      </Box>
-    );
-  }
-
   if (error) {
     return (
       <Box sx={{ 
@@ -158,52 +134,7 @@ const DataTable: React.FC<DataTableProps> = ({
     );
   }
 
-  if (data.length === 0) {
-    return (
-      <Box sx={{ 
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        p: 3
-      }}>
-        <Paper 
-          elevation={3}
-          sx={{ 
-            p: 6,
-            textAlign: 'center',
-            background: 'rgba(255, 255, 255, 0.95)',
-            borderRadius: 2,
-            maxWidth: '500px'
-          }}
-        >
-          <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, color: 'primary.main' }}>
-            No {title} Found
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-            Get started by creating your first {title.toLowerCase()}
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            startIcon={<AddIcon />}
-            onClick={() => navigate(createPath)}
-            sx={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              px: 4,
-              py: 1.5,
-              boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)'
-            }}
-          >
-            Create First {title}
-          </Button>
-        </Paper>
-      </Box>
-    );
-  }
-
-  const columns = Object.keys(data[0]);
+  const columns = data.length > 0 ? Object.keys(data[0]) : [];
   const displayColumns = columns.filter(col => col !== 'password');
 
   // Filter data based on search term (searches in 'name' field)
@@ -229,16 +160,17 @@ const DataTable: React.FC<DataTableProps> = ({
         mx: 'auto'
       }}>
         {/* Header Section */}
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            p: { xs: 2, sm: 2.5, md: 3 },
-            mb: { xs: 2, sm: 2.5, md: 3 },
-            background: 'rgba(255, 255, 255, 0.95)',
-            backdropFilter: 'blur(10px)',
-            borderRadius: 2
-          }}
-        >
+        <Fade in timeout={800}>
+          <Paper 
+            elevation={3} 
+            sx={{ 
+              p: { xs: 2, sm: 2.5, md: 3 },
+              mb: { xs: 2, sm: 2.5, md: 3 },
+              background: 'rgba(255, 255, 255, 0.95)',
+              backdropFilter: 'blur(10px)',
+              borderRadius: 2
+            }}
+          >
           <Box sx={{ 
             display: 'flex', 
             justifyContent: 'space-between', 
@@ -323,10 +255,48 @@ const DataTable: React.FC<DataTableProps> = ({
             />
           </Box>
         </Paper>
+        </Fade>
 
         {/* Table Section */}
-        {filteredData.length === 0 && searchTerm ? (
-          <Paper 
+        {data.length === 0 && !loading ? (
+          <Fade in timeout={1000}>
+            <Paper 
+            elevation={3} 
+            sx={{ 
+              p: { xs: 3, sm: 4, md: 6 },
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: 2
+            }}
+          >
+            <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, color: 'primary.main' }}>
+              No {title} Found
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+              Get started by creating your first {title.toLowerCase()}
+            </Typography>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<AddIcon />}
+              onClick={() => navigate(createPath)}
+              sx={{
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                px: 4,
+                py: 1.5,
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                '&:hover': {
+                  boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
+                }
+              }}
+            >
+              Create First {title}
+            </Button>
+          </Paper>
+          </Fade>
+        ) : filteredData.length === 0 && searchTerm ? (
+          <Fade in timeout={1000}>
+            <Paper 
             elevation={3} 
             sx={{ 
               p: { xs: 3, sm: 4, md: 6 },
@@ -354,8 +324,10 @@ const DataTable: React.FC<DataTableProps> = ({
               Try adjusting your search term
             </Typography>
           </Paper>
-        ) : (
-          <TableContainer 
+          </Fade>
+        ) : data.length > 0 ? (
+          <Slide direction="up" in timeout={1000}>
+            <TableContainer 
             component={Paper} 
             elevation={3}
             sx={{ 
@@ -441,8 +413,7 @@ const DataTable: React.FC<DataTableProps> = ({
                     sx={{ 
                       '&:hover': { 
                         backgroundColor: 'rgba(102, 126, 234, 0.08)',
-                        transform: { xs: 'none', md: 'scale(1.001)' },
-                        transition: 'all 0.2s ease'
+                        transition: 'background-color 0.2s ease'
                       },
                       '&:nth-of-type(even)': {
                         backgroundColor: 'rgba(0, 0, 0, 0.02)'
@@ -502,19 +473,22 @@ const DataTable: React.FC<DataTableProps> = ({
               </TableBody>
             </Table>
           </TableContainer>
-        )}
+          </Slide>
+        ) : null}
 
         {/* Footer Section */}
-        <Paper 
-          elevation={3} 
-          sx={{ 
-            mt: { xs: 2, sm: 2.5, md: 3 },
-            p: { xs: 1.5, sm: 2 },
-            textAlign: 'center',
-            background: 'rgba(255, 255, 255, 0.95)',
-            borderRadius: 2
-          }}
-        >
+        {data.length > 0 && (
+          <Fade in timeout={1200}>
+            <Paper 
+            elevation={3} 
+            sx={{ 
+              mt: { xs: 2, sm: 2.5, md: 3 },
+              p: { xs: 1.5, sm: 2 },
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.95)',
+              borderRadius: 2
+            }}
+          >
           <Typography 
             variant="body1" 
             sx={{ 
@@ -540,6 +514,8 @@ const DataTable: React.FC<DataTableProps> = ({
             )}
           </Typography>
         </Paper>
+          </Fade>
+        )}
       </Box>
     </Box>
   );

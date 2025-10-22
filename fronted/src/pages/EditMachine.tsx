@@ -1,6 +1,6 @@
 // Edit Machine Page
 import React, { useState, useEffect } from 'react';
-import { Button, Box, CircularProgress, Alert, Typography, Paper } from '@mui/material';
+import { Button, Box, CircularProgress, Alert, Typography, Paper, Fade, Slide } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import SmartForm from '../components/SmartForm';
@@ -39,39 +39,7 @@ const EditMachine: React.FC = () => {
     navigate('/machines');
   };
 
-  if (loading) {
-    return (
-      <Box 
-        sx={{ 
-          minHeight: '100vh',
-          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          py: { xs: 3, sm: 4, md: 5 },
-          px: { xs: 2, sm: 3 },
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
-        <Paper 
-          elevation={6}
-          sx={{ 
-            p: 6, 
-            textAlign: 'center',
-            background: 'rgba(255, 255, 255, 0.95)',
-            borderRadius: 3,
-            maxWidth: 400
-          }}
-        >
-          <CircularProgress size={60} thickness={4} sx={{ color: 'primary.main' }} />
-          <Typography variant="h6" sx={{ mt: 3, color: 'text.secondary' }}>
-            Loading machine data...
-          </Typography>
-        </Paper>
-      </Box>
-    );
-  }
-
-  if (error || !machineData) {
+  if (error) {
     return (
       <Box 
         sx={{ 
@@ -138,40 +106,46 @@ const EditMachine: React.FC = () => {
       }}
     >
       <Box sx={{ maxWidth: '800px', mx: 'auto' }}>
-        <Button
-          variant="outlined"
-          startIcon={<ArrowBack />}
-          onClick={() => navigate('/machines')}
-          sx={{
-            mb: 3,
-            color: 'white',
-            borderColor: 'rgba(255, 255, 255, 0.5)',
-            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-            backdropFilter: 'blur(10px)',
-            fontWeight: 600,
-            px: 3,
-            py: 1,
-            borderRadius: 2,
-            textTransform: 'none',
-            fontSize: { xs: '0.9rem', sm: '1rem' },
-            '&:hover': {
-              borderColor: 'white',
-              backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              transform: 'translateX(-5px)',
-              transition: 'all 0.3s ease'
-            }
-          }}
-        >
-          Back to Machines
-        </Button>
+        <Fade in timeout={600}>
+          <Button
+            variant="outlined"
+            startIcon={<ArrowBack />}
+            onClick={() => navigate('/machines')}
+            sx={{
+              mb: 3,
+              color: 'white',
+              borderColor: 'rgba(255, 255, 255, 0.5)',
+              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              backdropFilter: 'blur(10px)',
+              fontWeight: 600,
+              px: 3,
+              py: 1,
+              borderRadius: 2,
+              textTransform: 'none',
+              fontSize: { xs: '0.9rem', sm: '1rem' },
+              '&:hover': {
+                borderColor: 'white',
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                transform: 'translateX(-5px)',
+                transition: 'all 0.3s ease'
+              }
+            }}
+          >
+            Back to Machines
+          </Button>
+        </Fade>
         
-        <SmartForm
-          topic="machine"
-          formType="update"
-          rawData={machineData}
-          machineId={Number(id)}
-          onSuccess={handleSuccess}
-        />
+        <Slide direction="up" in timeout={900}>
+          <Box>
+            <SmartForm
+              topic="machine"
+              formType="update"
+              rawData={machineData}
+              machineId={Number(id)}
+              onSuccess={handleSuccess}
+            />
+          </Box>
+        </Slide>
       </Box>
     </Box>
   );

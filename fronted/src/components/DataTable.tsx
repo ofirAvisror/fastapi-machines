@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { Edit as EditIcon, Add as AddIcon, Search as SearchIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../context/ThemeContext';
 import api from '../api/axios';
 
 interface DataTableProps {
@@ -42,6 +43,48 @@ const DataTable: React.FC<DataTableProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const navigate = useNavigate();
+  const { mode } = useTheme();
+
+  // Helper function to get theme-specific styles
+  const getThemeStyles = () => {
+    if (mode === 'dark') {
+      return {
+        bgGradient: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+        paperBg: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+        searchBg: 'rgba(15, 23, 42, 0.6)',
+        searchBorder: 'rgba(96, 165, 250, 0.2)',
+        searchBorderFocus: '#60a5fa',
+        textColor: '#f1f5f9',
+        titleGradient: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+        buttonGradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+        buttonHover: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+        editButton: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
+        editButtonHover: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+        tableHeaderBg: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+        tableRowHover: 'rgba(96, 165, 250, 0.08)',
+        tableRowEven: 'rgba(15, 23, 42, 0.3)',
+      };
+    } else {
+      return {
+        bgGradient: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%)',
+        paperBg: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
+        searchBg: 'rgba(255, 255, 255, 0.9)',
+        searchBorder: 'rgba(102, 126, 234, 0.2)',
+        searchBorderFocus: '#667eea',
+        textColor: '#1e293b',
+        titleGradient: 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
+        buttonGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        buttonHover: 'linear-gradient(135deg, #4c63d2 0%, #5a3a7c 100%)',
+        editButton: 'linear-gradient(135deg, #f093fb 0%, #c961e8 100%)',
+        editButtonHover: 'linear-gradient(135deg, #c961e8 0%, #a145c5 100%)',
+        tableHeaderBg: 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
+        tableRowHover: 'rgba(102, 126, 234, 0.08)',
+        tableRowEven: 'rgba(102, 126, 234, 0.03)',
+      };
+    }
+  };
+
+  const themeStyles = getThemeStyles();
 
   useEffect(() => {
     fetchData();
@@ -124,7 +167,7 @@ const DataTable: React.FC<DataTableProps> = ({
     return (
       <Box sx={{ 
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+        background: themeStyles.bgGradient,
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
@@ -135,9 +178,9 @@ const DataTable: React.FC<DataTableProps> = ({
           sx={{ 
             p: 4,
             maxWidth: '500px',
-            background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+            background: themeStyles.paperBg,
             borderRadius: 3,
-            border: '1px solid rgba(96, 165, 250, 0.1)',
+            border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
           }}
         >
           <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
@@ -146,14 +189,14 @@ const DataTable: React.FC<DataTableProps> = ({
             variant="contained"
             fullWidth
             sx={{
-              background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+              background: themeStyles.buttonGradient,
               py: 1.5,
               fontWeight: 600,
               borderRadius: 2.5,
-              boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
+              boxShadow: mode === 'dark' ? '0 4px 14px 0 rgba(96, 165, 250, 0.39)' : '0 4px 14px 0 rgba(102, 126, 234, 0.2)',
               '&:hover': {
-                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
+                background: themeStyles.buttonHover,
+                boxShadow: mode === 'dark' ? '0 6px 20px rgba(96, 165, 250, 0.50)' : '0 6px 20px rgba(102, 126, 234, 0.30)',
               }
             }}
           >
@@ -179,7 +222,7 @@ const DataTable: React.FC<DataTableProps> = ({
       minHeight: '100vh',
       height: 'auto',
       width: '100%',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
+      background: themeStyles.bgGradient,
       py: { xs: 2, sm: 3, md: 4 },
       px: { xs: 1, sm: 2, md: 3 },
       margin: 0,
@@ -196,11 +239,11 @@ const DataTable: React.FC<DataTableProps> = ({
             sx={{ 
               p: { xs: 2, sm: 2.5, md: 3 },
               mb: { xs: 2, sm: 2.5, md: 3 },
-              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              background: themeStyles.paperBg,
               backdropFilter: 'blur(20px)',
               borderRadius: 3,
-              border: '1px solid rgba(96, 165, 250, 0.1)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
+              border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
+              boxShadow: mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)' : '0 8px 32px 0 rgba(0, 0, 0, 0.1)'
             }}
           >
           <Box sx={{ 
@@ -216,7 +259,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 sx={{ 
                   fontSize: { xs: '1.75rem', sm: '2.5rem', md: '3rem' },
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+                  background: themeStyles.titleGradient,
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -240,18 +283,18 @@ const DataTable: React.FC<DataTableProps> = ({
               onClick={() => navigate(createPath)}
               sx={{
                 width: { xs: '100%', sm: 'auto' },
-                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                background: themeStyles.buttonGradient,
                 px: { xs: 3, sm: 4 },
                 py: { xs: 1.2, sm: 1.5 },
                 fontSize: { xs: '0.9rem', sm: '1rem' },
                 fontWeight: 600,
                 textTransform: 'none',
-                boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
+                boxShadow: mode === 'dark' ? '0 4px 14px 0 rgba(96, 165, 250, 0.39)' : '0 4px 14px 0 rgba(102, 126, 234, 0.2)',
                 whiteSpace: 'nowrap',
                 borderRadius: 2.5,
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                  boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
+                  background: themeStyles.buttonHover,
+                  boxShadow: mode === 'dark' ? '0 6px 20px rgba(96, 165, 250, 0.50)' : '0 6px 20px rgba(102, 126, 234, 0.30)',
                   transform: 'translateY(-2px)',
                   transition: 'all 0.3s ease'
                 }
@@ -272,27 +315,27 @@ const DataTable: React.FC<DataTableProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: '#60a5fa' }} />
+                    <SearchIcon sx={{ color: mode === 'dark' ? '#60a5fa' : '#667eea' }} />
                   </InputAdornment>
                 ),
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                  backgroundColor: themeStyles.searchBg,
                   borderRadius: 2.5,
                   '& fieldset': {
-                    borderColor: 'rgba(96, 165, 250, 0.2)',
+                    borderColor: themeStyles.searchBorder,
                   },
                   '&:hover fieldset': {
-                    borderColor: 'rgba(96, 165, 250, 0.4)',
+                    borderColor: mode === 'dark' ? 'rgba(96, 165, 250, 0.4)' : 'rgba(102, 126, 234, 0.4)',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: '#60a5fa',
+                    borderColor: themeStyles.searchBorderFocus,
                     borderWidth: '2px',
                   }
                 },
                 '& .MuiOutlinedInput-input': {
-                  color: '#f1f5f9',
+                  color: themeStyles.textColor,
                 }
               }}
             />
@@ -308,12 +351,12 @@ const DataTable: React.FC<DataTableProps> = ({
             sx={{ 
               p: { xs: 3, sm: 4, md: 6 },
               textAlign: 'center',
-              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              background: themeStyles.paperBg,
               borderRadius: 3,
-              border: '1px solid rgba(96, 165, 250, 0.1)',
+              border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
             }}
           >
-            <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, color: '#60a5fa' }}>
+            <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, color: mode === 'dark' ? '#60a5fa' : '#667eea' }}>
               No {title} Found
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -325,15 +368,15 @@ const DataTable: React.FC<DataTableProps> = ({
               startIcon={<AddIcon />}
               onClick={() => navigate(createPath)}
               sx={{
-                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                background: themeStyles.buttonGradient,
                 px: 4,
                 py: 1.5,
                 fontWeight: 600,
                 borderRadius: 2.5,
-                boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
+                boxShadow: mode === 'dark' ? '0 4px 14px 0 rgba(96, 165, 250, 0.39)' : '0 4px 14px 0 rgba(102, 126, 234, 0.2)',
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                  boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
+                  background: themeStyles.buttonHover,
+                  boxShadow: mode === 'dark' ? '0 6px 20px rgba(96, 165, 250, 0.50)' : '0 6px 20px rgba(102, 126, 234, 0.30)',
                 }
               }}
             >
@@ -348,9 +391,9 @@ const DataTable: React.FC<DataTableProps> = ({
             sx={{ 
               p: { xs: 3, sm: 4, md: 6 },
               textAlign: 'center',
-              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              background: themeStyles.paperBg,
               borderRadius: 3,
-              border: '1px solid rgba(96, 165, 250, 0.1)',
+              border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
             }}
           >
             <Typography 
@@ -358,7 +401,7 @@ const DataTable: React.FC<DataTableProps> = ({
               sx={{ 
                 fontWeight: 600,
                 fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' },
-                color: '#cbd5e1',
+                color: mode === 'dark' ? '#cbd5e1' : '#64748b',
                 mb: 1
               }}
             >
@@ -379,12 +422,12 @@ const DataTable: React.FC<DataTableProps> = ({
             component={Paper} 
             elevation={8}
             sx={{ 
-              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              background: themeStyles.paperBg,
               borderRadius: 3,
               overflow: 'auto',
               maxWidth: '100%',
-              border: '1px solid rgba(96, 165, 250, 0.1)',
-              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+              border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
+              boxShadow: mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)' : '0 8px 32px 0 rgba(0, 0, 0, 0.1)',
               WebkitOverflowScrolling: 'touch',
               '&::-webkit-scrollbar': {
                 height: 10,
@@ -416,7 +459,7 @@ const DataTable: React.FC<DataTableProps> = ({
               <TableHead>
                 <TableRow 
                   sx={{ 
-                    background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+                    background: themeStyles.tableHeaderBg,
                   }}
                 >
                   {displayColumns.map((column) => (
@@ -462,13 +505,13 @@ const DataTable: React.FC<DataTableProps> = ({
                     key={row.id || index}
                     sx={{ 
                       '&:hover': { 
-                        backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                        backgroundColor: themeStyles.tableRowHover,
                         transition: 'background-color 0.3s ease'
                       },
                       '&:nth-of-type(even)': {
-                        backgroundColor: 'rgba(15, 23, 42, 0.3)'
+                        backgroundColor: themeStyles.tableRowEven
                       },
-                      borderBottom: '1px solid rgba(96, 165, 250, 0.1)'
+                      borderBottom: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.1)'
                     }}
                   >
                     {displayColumns.map((column) => (
@@ -502,18 +545,18 @@ const DataTable: React.FC<DataTableProps> = ({
                         startIcon={<EditIcon sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }} />}
                         onClick={() => navigate(`${editPathPrefix}/${row.id}`)}
                         sx={{
-                          background: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
+                          background: themeStyles.editButton,
                           textTransform: 'none',
                           fontWeight: 600,
                           px: { xs: 2, sm: 3 },
                           py: { xs: 0.6, sm: 0.8 },
                           fontSize: { xs: '0.75rem', sm: '0.875rem' },
                           borderRadius: 2,
-                          boxShadow: '0 4px 14px 0 rgba(167, 139, 250, 0.39)',
+                          boxShadow: mode === 'dark' ? '0 4px 14px 0 rgba(167, 139, 250, 0.39)' : '0 4px 14px 0 rgba(240, 147, 251, 0.2)',
                           whiteSpace: 'nowrap',
                           '&:hover': {
-                            background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
-                            boxShadow: '0 6px 20px rgba(167, 139, 250, 0.50)',
+                            background: themeStyles.editButtonHover,
+                            boxShadow: mode === 'dark' ? '0 6px 20px rgba(167, 139, 250, 0.50)' : '0 6px 20px rgba(240, 147, 251, 0.30)',
                             transform: 'translateY(-2px)',
                             transition: 'all 0.3s ease'
                           }
@@ -539,9 +582,9 @@ const DataTable: React.FC<DataTableProps> = ({
               mt: { xs: 2, sm: 2.5, md: 3 },
               p: { xs: 1.5, sm: 2 },
               textAlign: 'center',
-              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              background: themeStyles.paperBg,
               borderRadius: 3,
-              border: '1px solid rgba(96, 165, 250, 0.1)',
+              border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
             }}
           >
           <Typography 

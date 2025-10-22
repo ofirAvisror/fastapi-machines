@@ -2,6 +2,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import DataTable from '../components/DataTable';
+import ThemeToggle from '../components/ThemeToggle';
 
 const MachinesList: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const MachinesList: React.FC = () => {
       margin: 0,
       padding: 0
     }}>
+      <ThemeToggle />
       <DataTable
         topic="machine"
         title="Machines"

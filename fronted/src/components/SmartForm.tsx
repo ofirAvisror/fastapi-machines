@@ -16,6 +16,7 @@ import {
   Grow,
 } from '@mui/material';
 import { Save as SaveIcon, Add as AddIcon } from '@mui/icons-material';
+import { useTheme } from '../context/ThemeContext';
 import api from '../api/axios';
 import type { JSONSchema, SchemaProperty, FormType } from '../types';
 
@@ -42,6 +43,34 @@ const SmartForm: React.FC<SmartFormProps> = ({
   const [success, setSuccess] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+  const { mode } = useTheme();
+
+  // Helper function to get theme-specific styles
+  const getThemeStyles = () => {
+    if (mode === 'dark') {
+      return {
+        paperBg: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+        inputBg: 'rgba(15, 23, 42, 0.6)',
+        inputBorder: 'rgba(96, 165, 250, 0.2)',
+        inputBorderFocus: '#60a5fa',
+        titleGradient: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+        buttonGradient: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+        buttonHover: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+      };
+    } else {
+      return {
+        paperBg: 'linear-gradient(145deg, #ffffff 0%, #f8fafc 100%)',
+        inputBg: 'rgba(255, 255, 255, 0.9)',
+        inputBorder: 'rgba(102, 126, 234, 0.2)',
+        inputBorderFocus: '#667eea',
+        titleGradient: 'linear-gradient(135deg, #667eea 0%, #f093fb 100%)',
+        buttonGradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        buttonHover: 'linear-gradient(135deg, #4c63d2 0%, #5a3a7c 100%)',
+      };
+    }
+  };
+
+  const themeStyles = getThemeStyles();
 
   // Fetch schema on component mount
   useEffect(() => {
@@ -257,28 +286,30 @@ const SmartForm: React.FC<SmartFormProps> = ({
             },
             '& .MuiOutlinedInput-root': {
               borderRadius: 2.5,
-              backgroundColor: 'rgba(15, 23, 42, 0.6)',
+              backgroundColor: themeStyles.inputBg,
               transition: 'all 0.3s ease',
               '& fieldset': {
-                borderColor: 'rgba(96, 165, 250, 0.2)',
+                borderColor: themeStyles.inputBorder,
               },
               '&:hover': {
-                backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                backgroundColor: mode === 'dark' ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 1)',
               },
               '&:hover fieldset': {
-                borderColor: hasError ? 'error.main' : '#60a5fa',
+                borderColor: hasError ? 'error.main' : themeStyles.inputBorderFocus,
                 borderWidth: 2,
               },
               '&.Mui-focused': {
-                backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                backgroundColor: mode === 'dark' ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 1)',
                 transform: 'scale(1.02)',
               },
               '&.Mui-focused fieldset': {
-                borderColor: hasError ? 'error.main' : '#60a5fa',
+                borderColor: hasError ? 'error.main' : themeStyles.inputBorderFocus,
                 borderWidth: 2,
                 boxShadow: hasError 
                   ? '0 0 0 3px rgba(248, 113, 113, 0.2)'
-                  : '0 0 0 3px rgba(96, 165, 250, 0.2)',
+                  : mode === 'dark' 
+                    ? '0 0 0 3px rgba(96, 165, 250, 0.2)'
+                    : '0 0 0 3px rgba(102, 126, 234, 0.15)',
               }
             }
           }}
@@ -375,36 +406,38 @@ const SmartForm: React.FC<SmartFormProps> = ({
           },
           '& .MuiOutlinedInput-root': {
             borderRadius: 2.5,
-            backgroundColor: 'rgba(15, 23, 42, 0.6)',
+            backgroundColor: themeStyles.inputBg,
             transition: 'all 0.3s ease',
             '& fieldset': {
-              borderColor: 'rgba(96, 165, 250, 0.2)',
+              borderColor: themeStyles.inputBorder,
             },
             '&:hover': {
-              backgroundColor: 'rgba(15, 23, 42, 0.8)',
+              backgroundColor: mode === 'dark' ? 'rgba(15, 23, 42, 0.8)' : 'rgba(255, 255, 255, 1)',
               '& fieldset': {
-                borderColor: hasError ? 'error.main' : '#60a5fa',
+                borderColor: hasError ? 'error.main' : themeStyles.inputBorderFocus,
                 borderWidth: 2,
               }
             },
             '&.Mui-focused': {
-              backgroundColor: 'rgba(15, 23, 42, 0.9)',
+              backgroundColor: mode === 'dark' ? 'rgba(15, 23, 42, 0.9)' : 'rgba(255, 255, 255, 1)',
               transform: 'scale(1.02)',
               '& fieldset': {
-                borderColor: hasError ? 'error.main' : '#60a5fa',
+                borderColor: hasError ? 'error.main' : themeStyles.inputBorderFocus,
                 borderWidth: 2,
                 boxShadow: hasError 
                   ? '0 0 0 3px rgba(248, 113, 113, 0.2)'
-                  : '0 0 0 3px rgba(96, 165, 250, 0.2)',
+                  : mode === 'dark' 
+                    ? '0 0 0 3px rgba(96, 165, 250, 0.2)'
+                    : '0 0 0 3px rgba(102, 126, 234, 0.15)',
               }
             }
           },
           '& .MuiInputLabel-root.Mui-focused': {
-            color: hasError ? 'error.main' : '#60a5fa',
+            color: hasError ? 'error.main' : themeStyles.inputBorderFocus,
             fontWeight: 600,
           },
           '& .MuiFormHelperText-root': {
-            color: hasError ? 'error.main' : '#94a3b8',
+            color: hasError ? 'error.main' : mode === 'dark' ? '#94a3b8' : '#64748b',
           }
         }}
       />
@@ -419,11 +452,11 @@ const SmartForm: React.FC<SmartFormProps> = ({
           p: { xs: 3, sm: 4, md: 5 },
           maxWidth: 700,
           mx: 'auto',
-          background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+          background: themeStyles.paperBg,
           backdropFilter: 'blur(20px)',
           borderRadius: 3,
-          border: '1px solid rgba(96, 165, 250, 0.1)',
-          boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+          border: mode === 'dark' ? '1px solid rgba(96, 165, 250, 0.1)' : '1px solid rgba(102, 126, 234, 0.15)',
+          boxShadow: mode === 'dark' ? '0 8px 32px 0 rgba(0, 0, 0, 0.37)' : '0 8px 32px 0 rgba(0, 0, 0, 0.1)',
         }}
       >
         {/* Header */}
@@ -433,7 +466,7 @@ const SmartForm: React.FC<SmartFormProps> = ({
             sx={{ 
               fontWeight: 700,
               fontSize: { xs: '1.75rem', sm: '2rem', md: '2.25rem' },
-              background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
+              background: themeStyles.titleGradient,
               backgroundClip: 'text',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
@@ -510,8 +543,8 @@ const SmartForm: React.FC<SmartFormProps> = ({
               startIcon={submitting ? null : (formType === 'create' ? <AddIcon /> : <SaveIcon />)}
               sx={{
                 background: submitting 
-                  ? 'rgba(96, 165, 250, 0.3)' 
-                  : 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+                  ? mode === 'dark' ? 'rgba(96, 165, 250, 0.3)' : 'rgba(102, 126, 234, 0.3)'
+                  : themeStyles.buttonGradient,
                 py: { xs: 1.5, sm: 1.8 },
                 fontSize: { xs: '1rem', sm: '1.1rem' },
                 fontWeight: 600,
@@ -519,11 +552,11 @@ const SmartForm: React.FC<SmartFormProps> = ({
                 borderRadius: 2.5,
                 boxShadow: submitting 
                   ? 'none' 
-                  : '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
+                  : mode === 'dark' ? '0 4px 14px 0 rgba(96, 165, 250, 0.39)' : '0 4px 14px 0 rgba(102, 126, 234, 0.2)',
                 transition: 'all 0.3s ease',
                 '&:hover': {
-                  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
-                  boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
+                  background: themeStyles.buttonHover,
+                  boxShadow: mode === 'dark' ? '0 6px 20px rgba(96, 165, 250, 0.50)' : '0 6px 20px rgba(102, 126, 234, 0.30)',
                   transform: 'translateY(-3px) scale(1.02)',
                   transition: 'all 0.3s ease'
                 },
@@ -531,8 +564,8 @@ const SmartForm: React.FC<SmartFormProps> = ({
                   transform: 'translateY(-1px) scale(0.98)',
                 },
                 '&:disabled': {
-                  background: 'rgba(96, 165, 250, 0.3)',
-                  color: 'rgba(241, 245, 249, 0.5)',
+                  background: mode === 'dark' ? 'rgba(96, 165, 250, 0.3)' : 'rgba(102, 126, 234, 0.3)',
+                  color: mode === 'dark' ? 'rgba(241, 245, 249, 0.5)' : 'rgba(30, 41, 59, 0.5)',
                 }
               }}
             >

@@ -30,6 +30,23 @@ fi
 
 echo ""
 echo "==================================="
+echo "  Fixing SQLModel Import"
+echo "==================================="
+# Detect Python path
+if [ -f "venv/Scripts/python.exe" ]; then
+    PYTHON="venv/Scripts/python.exe"
+else
+    PYTHON="./venv/bin/python"
+fi
+
+$PYTHON fix_migration.py
+
+if [ $? -ne 0 ]; then
+    echo "WARNING: Failed to fix migration, but continuing..."
+fi
+
+echo ""
+echo "==================================="
 echo "  Applying Migration"
 echo "==================================="
 $ALEMBIC upgrade head

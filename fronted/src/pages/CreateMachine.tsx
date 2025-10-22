@@ -38,15 +38,11 @@ const CreateMachine: React.FC = () => {
             borderRadius: 2,
             textTransform: 'none',
             fontSize: { xs: '0.9rem', sm: '1rem' },
-            transition: 'all 0.3s ease',
             '&:hover': {
               borderColor: 'white',
               backgroundColor: 'rgba(255, 255, 255, 0.2)',
-              transform: 'translateX(-5px) scale(1.05)',
+              transform: 'translateX(-5px)',
               transition: 'all 0.3s ease'
-            },
-            '&:active': {
-              transform: 'translateX(-3px) scale(0.98)',
             }
           }}
         >
@@ -54,4 +50,14 @@ const CreateMachine: React.FC = () => {
         </Button>
         
         <SmartForm
-          topic="mach
+          topic="machine"
+          formType="create"
+          onSuccess={handleSuccess}
+        />
+      </Box>
+    </Box>
+  );
+};
+
+export default CreateMachine;
+

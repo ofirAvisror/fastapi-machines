@@ -216,13 +216,17 @@ const DataTable: React.FC<DataTableProps> = ({
   return (
     <Box sx={{ 
       minHeight: '100vh',
+      height: 'auto',
+      width: '100%',
       background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-      py: { xs: 2, sm: 3, md: 4 }
+      py: { xs: 2, sm: 3, md: 4 },
+      px: { xs: 1, sm: 2, md: 3 },
+      margin: 0,
+      boxSizing: 'border-box'
     }}>
       <Box sx={{ 
         maxWidth: { xs: '100%', sm: '100%', md: '1400px' },
-        mx: 'auto', 
-        px: { xs: 1, sm: 2, md: 3 }
+        mx: 'auto'
       }}>
         {/* Header Section */}
         <Paper 
@@ -279,14 +283,10 @@ const DataTable: React.FC<DataTableProps> = ({
                 textTransform: 'none',
                 boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
                 whiteSpace: 'nowrap',
-                transition: 'all 0.3s ease',
                 '&:hover': {
                   boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
-                  transform: 'translateY(-3px) scale(1.03)',
+                  transform: 'translateY(-2px)',
                   transition: 'all 0.3s ease'
-                },
-                '&:active': {
-                  transform: 'translateY(-1px) scale(0.98)',
                 }
               }}
             >
@@ -535,4 +535,15 @@ const DataTable: React.FC<DataTableProps> = ({
             <Box component="span">{title.toLowerCase()}</Box>
             {searchTerm && (
               <Box component="span" sx={{ fontStyle: 'italic', color: 'text.secondary', display: { xs: 'block', sm: 'inline' }, width: { xs: '100%', sm: 'auto' }, mt: { xs: 0.5, sm: 0 } }}>
-                (filtere
+                (filtered by: "{searchTerm}")
+              </Box>
+            )}
+          </Typography>
+        </Paper>
+      </Box>
+    </Box>
+  );
+};
+
+export default DataTable;
+

@@ -8,6 +8,8 @@ from app.database import get_session
 from app.models import Machine
 
 
+# Test fixture that creates an in-memory SQLite database for testing
+# This ensures each test runs with a fresh, isolated database
 @pytest.fixture(name="session")
 def session_fixture():
     engine = create_engine(
@@ -20,6 +22,8 @@ def session_fixture():
         yield session
 
 
+# Test fixture that provides a TestClient with database session override
+# This allows us to use the test database instead of the production database
 @pytest.fixture(name="client")
 def client_fixture(session: Session):
     def get_session_override():
@@ -31,15 +35,23 @@ def client_fixture(session: Session):
     app.dependency_overrides.clear()
 
 
+# Test the health check endpoint
+# Verifies that the API is running and returns the expected status
 def test_health(client: TestClient):
-    """Test health endpoint"""
+    """Test health endpoint returns 200 OK with correct status message"""
     response = client.get("/health")
     assert response.status_code == 200
     assert response.json() == {"status": "ok"}
 
 
+# Test creating a new machine via POST /machine/create
+# Verifies that:
+# 1. The endpoint returns 201 Created status
+# 2. The machine is created with correct data
+# 3. Password is NOT included in the response (security check)
+# 4. An ID is automatically generated
 def test_create_machine(client: TestClient):
-    """Test creating a machine"""
+    """Test creating a machine returns 201 and excludes password from response"""
     machine_data = {
         "name": "Machine1",
         "location": "Tel Aviv",
@@ -57,8 +69,13 @@ def test_create_machine(client: TestClient):
     assert "id" in data
 
 
+# Test retrieving machines via GET /machine/get
+# Verifies that:
+# 1. The endpoint returns 200 OK status
+# 2. Machines can be retrieved from the database
+# 3. The response contains a list of machines
 def test_get_machines(client: TestClient, session: Session):
-    """Test getting all machines"""
+    """Test getting all machines returns 200 and retrieves stored machines"""
     machine1 = Machine(
         name="M1",
         location="Location1",
@@ -77,8 +94,14 @@ def test_get_machines(client: TestClient, session: Session):
     assert len(data) >= 1
 
 
+# Test updating an existing machine via PUT /machine/update
+# Verifies that:
+# 1. An existing machine can be updated
+# 2. The endpoint returns 200 OK status
+# 3. The updated data is correctly saved
+# 4. The edited_at timestamp is automatically updated
 def test_update_machine(client: TestClient, session: Session):
-    """Test updating a machine"""
+    """Test updating a machine returns 200 and updates the data correctly"""
     machine = Machine(
         name="Original",
         location="Old Location",
@@ -107,8 +130,14 @@ def test_update_machine(client: TestClient, session: Session):
     assert data["name"] == "Updated"
 
 
+# Test retrieving the JSON schema for machine creation via GET /machine/schema/create
+# Verifies that:
+# 1. The endpoint returns 200 OK status
+# 2. A valid JSON schema is returned
+# 3. The schema contains the expected properties
+# This schema is used by the frontend to dynamically generate forms
 def test_get_schema_create(client: TestClient):
-    """Test getting create schema"""
+    """Test getting create schema returns 200 and valid JSON schema for dynamic form generation"""
     response = client.get("/machine/schema/create")
     assert response.status_code == 200
     schema = response.json()

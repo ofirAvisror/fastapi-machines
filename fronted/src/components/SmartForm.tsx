@@ -384,4 +384,32 @@ const SmartForm: React.FC<SmartFormProps> = ({
                 '&:hover': {
                   boxShadow: '0 6px 25px rgba(102, 126, 234, 0.6)',
                   transform: 'translateY(-3px) scale(1.02)',
-          
+                  transition: 'all 0.3s ease'
+                },
+                '&:active': {
+                  transform: 'translateY(-1px) scale(0.98)',
+                },
+                '&:disabled': {
+                  background: 'rgba(102, 126, 234, 0.5)',
+                  color: 'white',
+                }
+              }}
+            >
+              {submitting ? (
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <CircularProgress size={24} sx={{ color: 'white' }} />
+                  <span>{formType === 'create' ? 'Creating...' : 'Updating...'}</span>
+                </Box>
+              ) : (
+                formType === 'create' ? 'Create Machine' : 'Save Changes'
+              )}
+            </Button>
+          </Box>
+        </Box>
+      </Paper>
+    </Fade>
+  );
+};
+
+export default SmartForm;
+

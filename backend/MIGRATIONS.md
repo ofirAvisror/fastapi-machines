@@ -17,7 +17,11 @@ chmod +x migrate.sh
 ./migrate.sh "description of change"
 ```
 
-**That's it!** The database updates automatically!
+**That's it!** The script will:
+
+1. Create the migration
+2. Automatically fix SQLModel imports (if needed)
+3. Apply the migration to the database
 
 ---
 

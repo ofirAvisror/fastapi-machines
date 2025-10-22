@@ -21,6 +21,16 @@ if %ERRORLEVEL% NEQ 0 (
 
 echo.
 echo ===================================
+echo   Fixing SQLModel Import
+echo ===================================
+call venv\Scripts\python.exe fix_migration.py
+
+if %ERRORLEVEL% NEQ 0 (
+    echo WARNING: Failed to fix migration, but continuing...
+)
+
+echo.
+echo ===================================
 echo   Applying Migration
 echo ===================================
 call venv\Scripts\alembic.exe upgrade head

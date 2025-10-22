@@ -124,19 +124,20 @@ const DataTable: React.FC<DataTableProps> = ({
     return (
       <Box sx={{ 
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
         p: 3
       }}>
         <Paper 
-          elevation={3}
+          elevation={8}
           sx={{ 
             p: 4,
             maxWidth: '500px',
-            background: 'rgba(255, 255, 255, 0.95)',
-            borderRadius: 2
+            background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+            borderRadius: 3,
+            border: '1px solid rgba(96, 165, 250, 0.1)',
           }}
         >
           <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>
@@ -145,8 +146,15 @@ const DataTable: React.FC<DataTableProps> = ({
             variant="contained"
             fullWidth
             sx={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              py: 1.5
+              background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
+              py: 1.5,
+              fontWeight: 600,
+              borderRadius: 2.5,
+              boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
+              '&:hover': {
+                background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
+              }
             }}
           >
             Retry
@@ -171,7 +179,7 @@ const DataTable: React.FC<DataTableProps> = ({
       minHeight: '100vh',
       height: 'auto',
       width: '100%',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
       py: { xs: 2, sm: 3, md: 4 },
       px: { xs: 1, sm: 2, md: 3 },
       margin: 0,
@@ -184,13 +192,15 @@ const DataTable: React.FC<DataTableProps> = ({
         {/* Header Section */}
         <Fade in timeout={800}>
           <Paper 
-            elevation={3} 
+            elevation={8} 
             sx={{ 
               p: { xs: 2, sm: 2.5, md: 3 },
               mb: { xs: 2, sm: 2.5, md: 3 },
-              background: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(10px)',
-              borderRadius: 2
+              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              backdropFilter: 'blur(20px)',
+              borderRadius: 3,
+              border: '1px solid rgba(96, 165, 250, 0.1)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
             }}
           >
           <Box sx={{ 
@@ -206,7 +216,7 @@ const DataTable: React.FC<DataTableProps> = ({
                 sx={{ 
                   fontSize: { xs: '1.75rem', sm: '2.5rem', md: '3rem' },
                   fontWeight: 700,
-                  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
                   backgroundClip: 'text',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
@@ -230,15 +240,18 @@ const DataTable: React.FC<DataTableProps> = ({
               onClick={() => navigate(createPath)}
               sx={{
                 width: { xs: '100%', sm: 'auto' },
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
                 px: { xs: 3, sm: 4 },
                 py: { xs: 1.2, sm: 1.5 },
                 fontSize: { xs: '0.9rem', sm: '1rem' },
+                fontWeight: 600,
                 textTransform: 'none',
-                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
                 whiteSpace: 'nowrap',
+                borderRadius: 2.5,
                 '&:hover': {
-                  boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
+                  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                  boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
                   transform: 'translateY(-2px)',
                   transition: 'all 0.3s ease'
                 }
@@ -259,19 +272,27 @@ const DataTable: React.FC<DataTableProps> = ({
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <SearchIcon sx={{ color: 'primary.main' }} />
+                    <SearchIcon sx={{ color: '#60a5fa' }} />
                   </InputAdornment>
                 ),
               }}
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  backgroundColor: 'white',
+                  backgroundColor: 'rgba(15, 23, 42, 0.6)',
+                  borderRadius: 2.5,
+                  '& fieldset': {
+                    borderColor: 'rgba(96, 165, 250, 0.2)',
+                  },
                   '&:hover fieldset': {
-                    borderColor: 'primary.main',
+                    borderColor: 'rgba(96, 165, 250, 0.4)',
                   },
                   '&.Mui-focused fieldset': {
-                    borderColor: 'primary.main',
+                    borderColor: '#60a5fa',
+                    borderWidth: '2px',
                   }
+                },
+                '& .MuiOutlinedInput-input': {
+                  color: '#f1f5f9',
                 }
               }}
             />
@@ -283,15 +304,16 @@ const DataTable: React.FC<DataTableProps> = ({
         {data.length === 0 && !loading ? (
           <Fade in timeout={1000}>
             <Paper 
-            elevation={3} 
+            elevation={8} 
             sx={{ 
               p: { xs: 3, sm: 4, md: 6 },
               textAlign: 'center',
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: 2
+              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              borderRadius: 3,
+              border: '1px solid rgba(96, 165, 250, 0.1)',
             }}
           >
-            <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, color: 'primary.main' }}>
+            <Typography variant="h4" sx={{ mb: 2, fontWeight: 700, color: '#60a5fa' }}>
               No {title} Found
             </Typography>
             <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
@@ -303,12 +325,15 @@ const DataTable: React.FC<DataTableProps> = ({
               startIcon={<AddIcon />}
               onClick={() => navigate(createPath)}
               sx={{
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                background: 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)',
                 px: 4,
                 py: 1.5,
-                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                fontWeight: 600,
+                borderRadius: 2.5,
+                boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
                 '&:hover': {
-                  boxShadow: '0 6px 20px rgba(102, 126, 234, 0.6)',
+                  background: 'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+                  boxShadow: '0 6px 20px rgba(96, 165, 250, 0.50)',
                 }
               }}
             >
@@ -319,21 +344,22 @@ const DataTable: React.FC<DataTableProps> = ({
         ) : filteredData.length === 0 && searchTerm ? (
           <Fade in timeout={1000}>
             <Paper 
-            elevation={3} 
+            elevation={8} 
             sx={{ 
               p: { xs: 3, sm: 4, md: 6 },
               textAlign: 'center',
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: 2
+              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              borderRadius: 3,
+              border: '1px solid rgba(96, 165, 250, 0.1)',
             }}
           >
             <Typography 
               variant="h5" 
-              color="text.secondary" 
-              gutterBottom 
               sx={{ 
                 fontWeight: 600,
-                fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' }
+                fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.5rem' },
+                color: '#cbd5e1',
+                mb: 1
               }}
             >
               No results found for "{searchTerm}"
@@ -351,27 +377,29 @@ const DataTable: React.FC<DataTableProps> = ({
           <Slide direction="up" in timeout={1000}>
             <TableContainer 
             component={Paper} 
-            elevation={3}
+            elevation={8}
             sx={{ 
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: 2,
+              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              borderRadius: 3,
               overflow: 'auto',
               maxWidth: '100%',
-              WebkitOverflowScrolling: 'touch', // Smooth scrolling on iOS
+              border: '1px solid rgba(96, 165, 250, 0.1)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+              WebkitOverflowScrolling: 'touch',
               '&::-webkit-scrollbar': {
                 height: 10,
                 width: 10,
               },
               '&::-webkit-scrollbar-track': {
-                backgroundColor: 'rgba(0,0,0,0.05)',
+                backgroundColor: 'rgba(15, 23, 42, 0.3)',
                 borderRadius: 2,
               },
               '&::-webkit-scrollbar-thumb': {
-                backgroundColor: 'rgba(102, 126, 234, 0.5)',
+                backgroundColor: 'rgba(96, 165, 250, 0.5)',
                 borderRadius: 4,
-                border: '2px solid rgba(255,255,255,0.5)',
+                border: '2px solid rgba(30, 41, 59, 0.5)',
                 '&:hover': {
-                  backgroundColor: 'rgba(102, 126, 234, 0.8)',
+                  backgroundColor: 'rgba(96, 165, 250, 0.8)',
                 }
               },
               '&::-webkit-scrollbar-corner': {
@@ -388,7 +416,7 @@ const DataTable: React.FC<DataTableProps> = ({
               <TableHead>
                 <TableRow 
                   sx={{ 
-                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                    background: 'linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%)',
                   }}
                 >
                   {displayColumns.map((column) => (
@@ -434,12 +462,13 @@ const DataTable: React.FC<DataTableProps> = ({
                     key={row.id || index}
                     sx={{ 
                       '&:hover': { 
-                        backgroundColor: 'rgba(102, 126, 234, 0.08)',
-                        transition: 'background-color 0.2s ease'
+                        backgroundColor: 'rgba(96, 165, 250, 0.08)',
+                        transition: 'background-color 0.3s ease'
                       },
                       '&:nth-of-type(even)': {
-                        backgroundColor: 'rgba(0, 0, 0, 0.02)'
-                      }
+                        backgroundColor: 'rgba(15, 23, 42, 0.3)'
+                      },
+                      borderBottom: '1px solid rgba(96, 165, 250, 0.1)'
                     }}
                   >
                     {displayColumns.map((column) => (
@@ -473,17 +502,20 @@ const DataTable: React.FC<DataTableProps> = ({
                         startIcon={<EditIcon sx={{ fontSize: { xs: '0.9rem', sm: '1rem' } }} />}
                         onClick={() => navigate(`${editPathPrefix}/${row.id}`)}
                         sx={{
-                          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                          background: 'linear-gradient(135deg, #a78bfa 0%, #8b5cf6 100%)',
                           textTransform: 'none',
+                          fontWeight: 600,
                           px: { xs: 2, sm: 3 },
                           py: { xs: 0.6, sm: 0.8 },
                           fontSize: { xs: '0.75rem', sm: '0.875rem' },
-                          boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
+                          borderRadius: 2,
+                          boxShadow: '0 4px 14px 0 rgba(167, 139, 250, 0.39)',
                           whiteSpace: 'nowrap',
                           '&:hover': {
-                            boxShadow: '0 4px 12px rgba(102, 126, 234, 0.5)',
+                            background: 'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+                            boxShadow: '0 6px 20px rgba(167, 139, 250, 0.50)',
                             transform: 'translateY(-2px)',
-                            transition: 'all 0.2s ease'
+                            transition: 'all 0.3s ease'
                           }
                         }}
                       >
@@ -502,13 +534,14 @@ const DataTable: React.FC<DataTableProps> = ({
         {data.length > 0 && (
           <Fade in timeout={1200}>
             <Paper 
-            elevation={3} 
+            elevation={8} 
             sx={{ 
               mt: { xs: 2, sm: 2.5, md: 3 },
               p: { xs: 1.5, sm: 2 },
               textAlign: 'center',
-              background: 'rgba(255, 255, 255, 0.95)',
-              borderRadius: 2
+              background: 'linear-gradient(145deg, #1e293b 0%, #334155 100%)',
+              borderRadius: 3,
+              border: '1px solid rgba(96, 165, 250, 0.1)',
             }}
           >
           <Typography 

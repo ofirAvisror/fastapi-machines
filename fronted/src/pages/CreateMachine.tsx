@@ -16,7 +16,7 @@ const CreateMachine: React.FC = () => {
     <Box 
       sx={{ 
         minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)',
         py: { xs: 3, sm: 4, md: 5 },
         px: { xs: 2, sm: 3 }
       }}
@@ -29,20 +29,21 @@ const CreateMachine: React.FC = () => {
             onClick={() => navigate('/machines')}
             sx={{
               mb: 3,
-              color: 'white',
-              borderColor: 'rgba(255, 255, 255, 0.5)',
-              backgroundColor: 'rgba(255, 255, 255, 0.1)',
+              color: '#60a5fa',
+              borderColor: 'rgba(96, 165, 250, 0.5)',
+              backgroundColor: 'rgba(30, 41, 59, 0.6)',
               backdropFilter: 'blur(10px)',
               fontWeight: 600,
               px: 3,
               py: 1,
-              borderRadius: 2,
+              borderRadius: 2.5,
               textTransform: 'none',
               fontSize: { xs: '0.9rem', sm: '1rem' },
               '&:hover': {
-                borderColor: 'white',
-                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                borderColor: '#60a5fa',
+                backgroundColor: 'rgba(30, 41, 59, 0.9)',
                 transform: 'translateX(-5px)',
+                boxShadow: '0 4px 14px 0 rgba(96, 165, 250, 0.39)',
                 transition: 'all 0.3s ease'
               }
             }}

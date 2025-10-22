@@ -478,7 +478,7 @@ const DataTable: React.FC<DataTableProps> = ({
                         whiteSpace: 'nowrap'
                       }}
                     >
-                      {column.replace(/_/g, ' ')}
+                      {column === 'enum' ? 'Status' : column.replace(/_/g, ' ')}
                     </TableCell>
                   ))}
                   <TableCell 

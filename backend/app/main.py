@@ -55,13 +55,16 @@ def get_machines(
     email: Optional[str] = Query(None, description="Filter by email"),
     session: Session = Depends(get_session)
 ):
-    """Get machines with optional filters"""
+    """Get machines with optional filters, ordered by name and email"""
     statement = select(Machine)
     
     if machine_id is not None:
         statement = statement.where(Machine.id == machine_id)
     if email is not None:
         statement = statement.where(Machine.email == email)
+    
+    # Order by name, then by email
+    statement = statement.order_by( Machine.email, Machine.enum,Machine.location, Machine.name)
     
     machines = session.exec(statement).all()
     return machines

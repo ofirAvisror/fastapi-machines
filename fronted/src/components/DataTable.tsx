@@ -65,10 +65,32 @@ const DataTable: React.FC<DataTableProps> = ({
       return value ? 'Yes' : 'No';
     }
     if (value === 'active') {
-      return <Chip label="Active" color="success" size="small" />;
+      return (
+        <Chip 
+          label="ACTIVE" 
+          color="success" 
+          size="small" 
+          sx={{ 
+            fontWeight: 700, 
+            letterSpacing: '0.5px',
+            px: 1
+          }} 
+        />
+      );
     }
     if (value === 'not_active') {
-      return <Chip label="Not Active" color="default" size="small" />;
+      return (
+        <Chip 
+          label="NOT ACTIVE" 
+          color="default" 
+          size="small" 
+          sx={{ 
+            fontWeight: 700, 
+            letterSpacing: '0.5px',
+            px: 1
+          }} 
+        />
+      );
     }
     if (typeof value === 'string' && (value.includes('T') || value.includes('-'))) {
       // Format datetime - handle UTC times from server

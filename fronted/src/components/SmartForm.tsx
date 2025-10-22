@@ -101,6 +101,13 @@ const SmartForm: React.FC<SmartFormProps> = ({
     return [];
   };
 
+  // Format enum value for display (e.g., "not_active" → "NOT ACTIVE")
+  const formatEnumValue = (value: string): string => {
+    return value
+      .replace(/_/g, ' ')  // Replace underscores with spaces
+      .toUpperCase();       // Convert to uppercase
+  };
+
   // Validate a single field
   const validateField = (fieldName: string, value: any): string => {
     if (!schema?.properties) return '';
@@ -279,10 +286,23 @@ const SmartForm: React.FC<SmartFormProps> = ({
             label={prop.title || fieldName}
             onChange={(e) => handleChange(fieldName, e.target.value)}
             onBlur={() => handleBlur(fieldName)}
+            renderValue={(selected) => (
+              <Box sx={{ fontWeight: 600, letterSpacing: '0.5px' }}>
+                {formatEnumValue(selected as string)}
+              </Box>
+            )}
           >
             {enumValues.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
+              <MenuItem 
+                key={option} 
+                value={option}
+                sx={{
+                  fontWeight: 600,
+                  letterSpacing: '0.5px',
+                  py: 1.5
+                }}
+              >
+                {formatEnumValue(option)}
               </MenuItem>
             ))}
           </Select>
@@ -428,9 +448,8 @@ const SmartForm: React.FC<SmartFormProps> = ({
               return (
                 <Grow 
                   in 
-                  timeout={600} 
+                  timeout={400 + index * 100}
                   style={{ transformOrigin: '0 0 0' }}
-                  {...({ timeout: 400 + index * 100 })}
                   key={fieldName}
                 >
                   <Box>

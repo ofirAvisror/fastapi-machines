@@ -1,0 +1,15 @@
+[
+  "app/test_main.py::test_create_machine",
+  "app/test_main.py::test_create_machine_invalid_email",
+  "app/test_main.py::test_create_machine_name_too_long",
+  "app/test_main.py::test_get_machine_by_email",
+  "app/test_main.py::test_get_machine_by_id",
+  "app/test_main.py::test_get_machines",
+  "app/test_main.py::test_get_machines_all",
+  "app/test_main.py::test_get_schema_create",
+  "app/test_main.py::test_get_schema_invalid_method",
+  "app/test_main.py::test_get_schema_update",
+  "app/test_main.py::test_health",
+  "app/test_main.py::test_update_machine",
+  "app/test_main.py::test_update_nonexistent_machine"
+]

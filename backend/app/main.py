@@ -66,7 +66,6 @@ def get_machines(
     machines = session.exec(statement).all()
     return machines
 
-
 @app.put("/machine/update", response_model=MachineRead)
 def update_machine(
     payload: MachineUpdate,

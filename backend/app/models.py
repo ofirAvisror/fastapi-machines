@@ -5,7 +5,6 @@ from enum import Enum
 from sqlmodel import Field, SQLModel
 from pydantic import EmailStr
 
-
 class MachineStatus(str, Enum):
     """Machine status enum"""
     active = "active"
@@ -36,9 +35,9 @@ class MachineCreate(MachineBase):
     password: str
 
 
-# Update model - for PUT requests
+# Update model - for PUT requests (password is optional - only update if provided)
 class MachineUpdate(MachineBase):
-    password: str
+    password: Optional[str] = None
 
 
 # Read model - for responses (no password)

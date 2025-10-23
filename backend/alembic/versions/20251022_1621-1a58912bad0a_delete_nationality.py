@@ -1,7 +1,7 @@
 """ delete nationality
 
 Revision ID: 1a58912bad0a
-Revises: 360e16875aca
+Revises: 2b76cdc96af8
 Create Date: 2025-10-22 16:21:38.991253
 
 """
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '1a58912bad0a'
-down_revision: Union[str, Sequence[str], None] = '360e16875aca'
+down_revision: Union[str, Sequence[str], None] = '2b76cdc96af8'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

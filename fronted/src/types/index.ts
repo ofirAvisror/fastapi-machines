@@ -1,27 +1,6 @@
-// Type definitions
+// Type definitions - Generic types for dynamic entities
 
-export interface Machine {
-  id: number;
-  name: string;
-  location: string;
-  email: string;
-  number: number;
-  float_number: number;
-  enum: 'active' | 'not_active';
-  created_at: string;
-  edited_at: string;
-}
-
-export interface MachineCreate {
-  name: string;
-  location: string;
-  email: string;
-  number: number;
-  float_number: number;
-  enum: 'active' | 'not_active';
-  password: string;
-}
-
+// Generic JSON Schema types for dynamic form generation
 export interface JSONSchema {
   $defs?: Record<string, any>;
   properties: Record<string, SchemaProperty>;

@@ -1,7 +1,7 @@
 """nationality
 
 Revision ID: 2b76cdc96af8
-Revises: a9f886169db1
+Revises: 55b699cd69f7
 Create Date: 2025-10-22 16:15:25.702175
 
 """
@@ -14,7 +14,7 @@ import sqlmodel
 
 # revision identifiers, used by Alembic.
 revision: str = '2b76cdc96af8'
-down_revision: Union[str, Sequence[str], None] = 'a9f886169db1'
+down_revision: Union[str, Sequence[str], None] = '55b699cd69f7'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

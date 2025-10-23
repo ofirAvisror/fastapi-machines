@@ -1,10 +1,11 @@
-// Machines List Page
+// Entities List Page (Generic for any entity)
 import React from 'react';
 import { Box } from '@mui/material';
 import DataTable from '../components/DataTable';
 import ThemeToggle from '../components/ThemeToggle';
+import { ENTITY_CONFIG, getRoutePath } from '../config/entities';
 
-const MachinesList: React.FC = () => {
+const EntitiesList: React.FC = () => {
   return (
     <Box sx={{ 
       width: '100%',
@@ -14,14 +15,14 @@ const MachinesList: React.FC = () => {
     }}>
       <ThemeToggle />
       <DataTable
-        topic="machine"
-        title="Machines"
-        createPath="/machines/create"
-        editPathPrefix="/machines/edit"
+        topic={ENTITY_CONFIG.apiName}
+        title={ENTITY_CONFIG.displayNamePlural}
+        createPath={getRoutePath('create')}
+        editPathPrefix={getRoutePath('edit')}
       />
     </Box>
   );
 };
 
-export default MachinesList;
+export default EntitiesList;
 

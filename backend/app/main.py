@@ -80,9 +80,17 @@ def update_machine(
     if not machine:
         raise HTTPException(status_code=404, detail="Machine not found")
     
-    update_data = payload.model_dump(exclude_unset=False)
+    # Get only the fields that were actually set in the request
+    update_data = payload.model_dump(exclude_unset=True)
+    
+    # Update fields, but handle password specially
     for key, value in update_data.items():
-        setattr(machine, key, value)
+        if key == 'password':
+            # Only update password if it's provided and not empty
+            if value and value.strip():
+                setattr(machine, key, value)
+        else:
+            setattr(machine, key, value)
     
     machine.edited_at = datetime.now(timezone.utc)
     

@@ -2,8 +2,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider as MUIThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
-import MachinesList from './pages/MachinesList';
-import MachineForm from './pages/MachineForm';
+import EntitiesList from './pages/MachinesList';
+import EntityForm from './pages/MachineForm';
 import { getRoutePath } from './config/entities';
 import './App.css';
 
@@ -220,9 +220,9 @@ const AppContent = () => {
       <Router>
         <Routes>
           <Route path="/" element={<Navigate to={getRoutePath()} replace />} />
-          <Route path={getRoutePath()} element={<MachinesList />} />
-          <Route path={getRoutePath('create')} element={<MachineForm />} />
-          <Route path={`${getRoutePath('edit')}/:id`} element={<MachineForm />} />
+          <Route path={getRoutePath()} element={<EntitiesList />} />
+          <Route path={getRoutePath('create')} element={<EntityForm />} />
+          <Route path={`${getRoutePath('edit')}/:id`} element={<EntityForm />} />
         </Routes>
       </Router>
     </MUIThemeProvider>

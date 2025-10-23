@@ -1,4 +1,4 @@
-// Machine Form Page - Unified Create/Edit
+// Entity Form Page - Unified Create/Edit (Generic for any entity)
 import React, { useState, useEffect } from 'react';
 import { Button, Box, Fade, Slide, Alert, Paper } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
@@ -9,7 +9,7 @@ import { useTheme } from '../context/ThemeContext';
 import { ENTITY_CONFIG, getRoutePath } from '../config/entities';
 import api from '../api/axios';
 
-const MachineForm: React.FC = () => {
+const EntityForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id?: string }>();
   const { mode } = useTheme();
@@ -179,5 +179,5 @@ const MachineForm: React.FC = () => {
   );
 };
 
-export default MachineForm;
+export default EntityForm;
 

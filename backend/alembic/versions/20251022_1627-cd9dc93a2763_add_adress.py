@@ -1,7 +1,7 @@
 """ add  adress
 
 Revision ID: cd9dc93a2763
-Revises: a57cd4af25bc
+Revises: 4abcfee3fd98
 Create Date: 2025-10-22 16:27:43.918289
 
 """
@@ -14,7 +14,7 @@ import sqlmodel
 
 # revision identifiers, used by Alembic.
 revision: str = 'cd9dc93a2763'
-down_revision: Union[str, Sequence[str], None] = 'a57cd4af25bc'
+down_revision: Union[str, Sequence[str], None] = '4abcfee3fd98'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

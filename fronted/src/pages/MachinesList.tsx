@@ -3,6 +3,7 @@ import React from 'react';
 import { Box } from '@mui/material';
 import DataTable from '../components/DataTable';
 import ThemeToggle from '../components/ThemeToggle';
+import { ENTITY_CONFIG, getRoutePath } from '../config/entities';
 
 const MachinesList: React.FC = () => {
   return (
@@ -14,10 +15,10 @@ const MachinesList: React.FC = () => {
     }}>
       <ThemeToggle />
       <DataTable
-        topic="machine"
-        title="Machines"
-        createPath="/machines/create"
-        editPathPrefix="/machines/edit"
+        topic={ENTITY_CONFIG.apiName}
+        title={ENTITY_CONFIG.displayNamePlural}
+        createPath={getRoutePath('create')}
+        editPathPrefix={getRoutePath('edit')}
       />
     </Box>
   );

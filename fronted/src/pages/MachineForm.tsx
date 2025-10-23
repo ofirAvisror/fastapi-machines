@@ -1,21 +1,26 @@
-// Edit Machine Page
+// Machine Form Page - Unified Create/Edit
 import React, { useState, useEffect } from 'react';
-import { Button, Box, CircularProgress, Alert, Typography, Paper, Fade, Slide } from '@mui/material';
+import { Button, Box, Fade, Slide, Alert, Paper } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { useNavigate, useParams } from 'react-router-dom';
 import SmartForm from '../components/SmartForm';
 import ThemeToggle from '../components/ThemeToggle';
 import { useTheme } from '../context/ThemeContext';
+import { ENTITY_CONFIG, getRoutePath } from '../config/entities';
 import api from '../api/axios';
 
-const EditMachine: React.FC = () => {
+const MachineForm: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const [machineData, setMachineData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id?: string }>();
   const { mode } = useTheme();
+  
+  const [entityData, setEntityData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
+  // Determine if this is edit mode (has ID) or create mode (no ID)
+  const isEditMode = !!id;
+
+  // Theme styles
   const bgGradient = mode === 'dark' 
     ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%)'
     : 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #f8fafc 100%)';
@@ -31,32 +36,31 @@ const EditMachine: React.FC = () => {
     ? 'linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%)'
     : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
 
+  // Fetch entity data if in edit mode
   useEffect(() => {
-    const fetchMachine = async () => {
+    if (!id) return;
+
+    const fetchEntity = async () => {
       try {
-        setLoading(true);
-        const response = await api.get(`/machine/get?id=${id}`);
+        const response = await api.get(`/${ENTITY_CONFIG.apiName}/get?id=${id}`);
         if (response.data && response.data.length > 0) {
-          setMachineData(response.data[0]);
+          setEntityData(response.data[0]);
         } else {
-          setError('Machine not found');
+          setError(`${ENTITY_CONFIG.displayName} not found`);
         }
       } catch (err: any) {
-        setError(`Failed to load machine: ${err.message}`);
-      } finally {
-        setLoading(false);
+        setError(`Failed to load ${ENTITY_CONFIG.apiName}: ${err.message}`);
       }
     };
 
-    if (id) {
-      fetchMachine();
-    }
+    fetchEntity();
   }, [id]);
 
   const handleSuccess = () => {
-    navigate('/machines');
+    navigate(getRoutePath());
   };
 
+  // Error state
   if (error) {
     return (
       <Box 
@@ -86,12 +90,12 @@ const EditMachine: React.FC = () => {
                 fontSize: '1rem'
               }}
             >
-              {error || 'Machine not found'}
+              {error}
             </Alert>
             <Button
               variant="contained"
               startIcon={<ArrowBack />}
-              onClick={() => navigate('/machines')}
+              onClick={() => navigate(getRoutePath())}
               sx={{
                 background: buttonGradient,
                 px: 4,
@@ -109,7 +113,7 @@ const EditMachine: React.FC = () => {
                 }
               }}
             >
-              Back to Machines
+              Back
             </Button>
           </Paper>
         </Box>
@@ -117,6 +121,7 @@ const EditMachine: React.FC = () => {
     );
   }
 
+  // Main form
   return (
     <Box 
       sx={{ 
@@ -132,7 +137,7 @@ const EditMachine: React.FC = () => {
           <Button
             variant="outlined"
             startIcon={<ArrowBack />}
-            onClick={() => navigate('/machines')}
+            onClick={() => navigate(getRoutePath())}
             sx={{
               mb: 3,
               color: buttonColor,
@@ -154,17 +159,17 @@ const EditMachine: React.FC = () => {
               }
             }}
           >
-            Back to Machines
+            Back
           </Button>
         </Fade>
         
         <Slide direction="up" in timeout={900}>
           <Box>
             <SmartForm
-              topic="machine"
-              formType="update"
-              rawData={machineData}
-              machineId={Number(id)}
+              topic={ENTITY_CONFIG.apiName}
+              formType={isEditMode ? 'update' : 'create'}
+              rawData={isEditMode ? entityData : undefined}
+              entityId={isEditMode ? Number(id) : undefined}
               onSuccess={handleSuccess}
             />
           </Box>
@@ -174,5 +179,5 @@ const EditMachine: React.FC = () => {
   );
 };
 
-export default EditMachine;
+export default MachineForm;
 

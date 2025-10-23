@@ -2,7 +2,7 @@
 
 
 Revision ID: 5eec571d9ac3
-Revises: 5ad08b34e0bb
+Revises: cd9dc93a2763
 Create Date: 2025-10-22 17:52:06.767174
 
 """
@@ -14,7 +14,7 @@ import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
 revision: str = '5eec571d9ac3'
-down_revision: Union[str, Sequence[str], None] = '5ad08b34e0bb'
+down_revision: Union[str, Sequence[str], None] = 'cd9dc93a2763'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

@@ -25,7 +25,7 @@ interface SmartFormProps {
   formType: FormType;
   rawData?: Record<string, any>;
   onSuccess?: () => void;
-  machineId?: number;
+  entityId?: number;  // Generic entity ID (was machineId)
 }
 
 const SmartForm: React.FC<SmartFormProps> = ({
@@ -33,7 +33,7 @@ const SmartForm: React.FC<SmartFormProps> = ({
   formType,
   rawData,
   onSuccess,
-  machineId,
+  entityId,
 }) => {
   const [schema, setSchema] = useState<JSONSchema | null>(null);
   const [formData, setFormData] = useState<Record<string, any>>({});
@@ -248,7 +248,8 @@ const SmartForm: React.FC<SmartFormProps> = ({
       if (formType === 'create') {
         await api.post(`/${topic}/create`, formData);
       } else {
-        await api.put(`/${topic}/update?machine_id=${machineId}`, formData);
+        // Use dynamic parameter name based on topic (e.g., machine_id, user_id, etc.)
+        await api.put(`/${topic}/update?${topic}_id=${entityId}`, formData);
       }
       
       setSuccess(true);
@@ -575,7 +576,7 @@ const SmartForm: React.FC<SmartFormProps> = ({
                   <span>{formType === 'create' ? 'Creating...' : 'Updating...'}</span>
                 </Box>
               ) : (
-                formType === 'create' ? 'Create Machine' : 'Save Changes'
+                formType === 'create' ? `Create ${topic.charAt(0).toUpperCase() + topic.slice(1)}` : 'Save Changes'
               )}
             </Button>
           </Box>

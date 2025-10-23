@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { ThemeProvider as MUIThemeProvider, createTheme, CssBaseline } from '@mui/material';
 import { ThemeProvider, useTheme } from './context/ThemeContext';
 import MachinesList from './pages/MachinesList';
-import CreateMachine from './pages/CreateMachine';
-import EditMachine from './pages/EditMachine';
+import MachineForm from './pages/MachineForm';
+import { getRoutePath } from './config/entities';
 import './App.css';
 
 // Dark Theme (Professional)
@@ -219,10 +219,10 @@ const AppContent = () => {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<Navigate to="/machines" replace />} />
-          <Route path="/machines" element={<MachinesList />} />
-          <Route path="/machines/create" element={<CreateMachine />} />
-          <Route path="/machines/edit/:id" element={<EditMachine />} />
+          <Route path="/" element={<Navigate to={getRoutePath()} replace />} />
+          <Route path={getRoutePath()} element={<MachinesList />} />
+          <Route path={getRoutePath('create')} element={<MachineForm />} />
+          <Route path={`${getRoutePath('edit')}/:id`} element={<MachineForm />} />
         </Routes>
       </Router>
     </MUIThemeProvider>
